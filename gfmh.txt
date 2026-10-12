@@ -1,0 +1,143 @@
+import pandas as pd
+import os
+
+# ============================================
+# مسیرها
+# ============================================
+
+desktop_path = r"C:\Users\ali\Desktop\Paper19"
+tables_path = os.path.join(desktop_path, "01_Tables")
+code_path = os.path.join(desktop_path, "03_Code")
+
+codon_table = pd.read_csv(os.path.join(tables_path, "RF_Codon_Table_64.csv"))
+
+# ============================================
+# کلاس کامپیوتر بیولوژیکی
+# ============================================
+
+class BiologicalComputer:
+    def __init__(self, codon_table):
+        self.codon_table = codon_table
+        self.memory = []  # حافظه موقت (RNA)
+        self.permanent_memory = []  # حافظه دائمی (DNA)
+    
+    # ---------- گیرنده RF ----------
+    def receive_rf(self, frequency_MHz, pulses, duration_us):
+        """دریافت امواج RF"""
+        return {
+            'frequency_MHz': frequency_MHz,
+            'pulses': pulses,
+            'duration_us': duration_us
+        }
+    
+    # ---------- مدار منطقی ----------
+    def logic_gate_AND(self, input1, input2):
+        """گیت AND"""
+        return input1 and input2
+    
+    def logic_gate_OR(self, input1, input2):
+        """گیت OR"""
+        return input1 or input2
+    
+    def logic_gate_NOT(self, input1):
+        """گیت NOT"""
+        return not input1
+    
+    # ---------- کامپایلر ----------
+    def compile_to_sequence(self, pattern):
+        """تبدیل الگوی RF به توالی DNA"""
+        sequence = ""
+        for item in pattern:
+            freq = item['frequency_MHz']
+            pulses = item['pulses']
+            duration = item['duration_us']
+            
+            row = self.codon_table[
+                (self.codon_table['frequency_MHz'] == freq) &
+                (self.codon_table['pulses'] == pulses) &
+                (self.codon_table['duration_us'] == duration)
+            ]
+            
+            if not row.empty:
+                sequence += row.iloc[0]['codon']
+        
+        return sequence
+    
+    # ---------- حافظه ----------
+    def store_temporary(self, data):
+        """ذخیره در حافظه موقت (RNA)"""
+        self.memory.append(data)
+    
+    def store_permanent(self, data):
+        """ذخیره در حافظه دائمی (DNA)"""
+        self.permanent_memory.append(data)
+    
+    # ---------- خروجی ----------
+    def produce_protein(self, sequence):
+        """تولید پروتئین از توالی"""
+        return f"Protein_{sequence}"
+    
+    # ---------- فرآیند کامل ----------
+    def process(self, rf_pattern):
+        """فرآیند کامل: RF → توالی → پروتئین"""
+        print("\n🧬 فرآیند کامپیوتر بیولوژیکی:")
+        
+        # ۱. دریافت RF
+        print(f"  ۱. دریافت RF: {rf_pattern}")
+        
+        # ۲. کامپایل
+        sequence = self.compile_to_sequence([rf_pattern])
+        print(f"  ۲. کامپایل → توالی: {sequence}")
+        
+        # ۳. ذخیره در حافظه
+        self.store_temporary(sequence)
+        self.store_permanent(sequence)
+        print(f"  ۳. ذخیره در حافظه (موقت + دائمی)")
+        
+        # ۴. تولید پروتئین
+        protein = self.produce_protein(sequence)
+        print(f"  ۴. تولید پروتئین: {protein}")
+        
+        return protein
+
+
+# ============================================
+# تست کامپیوتر بیولوژیکی
+# ============================================
+
+computer = BiologicalComputer(codon_table)
+
+# الگوی RF ورودی
+rf_input = {
+    'frequency_MHz': 10,
+    'pulses': 1,
+    'duration_us': 100
+}
+
+# اجرا
+result = computer.process(rf_input)
+
+print("\n" + "=" * 60)
+print("📊 وضعیت کامپیوتر:")
+print(f"  حافظه موقت: {computer.memory}")
+print(f"  حافظه دائمی: {computer.permanent_memory}")
+print(f"  خروجی: {result}")
+
+# ============================================
+# تست با چند الگو
+# ============================================
+
+print("\n" + "=" * 60)
+print("🧪 تست با چند الگو")
+print("=" * 60)
+
+test_patterns = [
+    {'frequency_MHz': 10, 'pulses': 1, 'duration_us': 100},
+    {'frequency_MHz': 20, 'pulses': 2, 'duration_us': 200},
+    {'frequency_MHz': 30, 'pulses': 3, 'duration_us': 300},
+    {'frequency_MHz': 40, 'pulses': 4, 'duration_us': 400},
+]
+
+for pattern in test_patterns:
+    seq = computer.compile_to_sequence([pattern])
+    print(f"  {pattern['frequency_MHz']} MHz → {seq}")
