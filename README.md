@@ -19,7 +19,7 @@ extended analyses, is described in the Methods section of the manuscript.
 
 ## Contents
 
-- `Untitled24 (1).ipynb` — minimal simulation notebook illustrating the core model
+- `gfmh.text` — minimal simulation notebook illustrating the core model
 - `RF_Codon_Table_64.csv` — codon table dataset used in the simulation (64 codons mapped to RF parameters)
 
 ---
